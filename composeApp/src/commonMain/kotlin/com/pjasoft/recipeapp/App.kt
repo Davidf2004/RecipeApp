@@ -1,21 +1,37 @@
 package com.pjasoft.recipeapp
 
-import LoginScreen
-import LoginScreenRoute
-import MainScreen
-import MainScreenGraph
-import MainScreenRoute
-import RecipeTheme
-import RegisterScreenRoute
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.pjasoft.recipeapp.presentacion.ui.screens.Auth.RegisterScreen
+import com.pjasoft.recipeapp.ui.RecipeTheme
+import com.pjasoft.recipeapp.ui.Screens.Auth.LoginScreen
+import com.pjasoft.recipeapp.ui.Screens.Auth.RegisterScreen
+import com.pjasoft.recipeapp.ui.Screens.HomeScreen.HomeScreen
+import com.pjasoft.recipeapp.ui.Screens.HomeScreenRoute
+import com.pjasoft.recipeapp.ui.Screens.LoginScreenRoute
+import com.pjasoft.recipeapp.ui.Screens.MainScreenGraph
+import com.pjasoft.recipeapp.ui.Screens.MainScreenRoute
+import com.pjasoft.recipeapp.ui.Screens.RegisterScreenRoute
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-// Patron Observable
+import recipeapp512.composeapp.generated.resources.Res
+import recipeapp512.composeapp.generated.resources.compose_multiplatform
+
 @Composable
 @Preview
 fun App() {
@@ -23,27 +39,21 @@ fun App() {
         val navController = rememberNavController()
         NavHost(
             navController = navController,
-            startDestination = MainScreenGraph
+            startDestination = LoginScreenRoute
         ){
-            composable<RegisterScreenRoute> {
+            composable <RegisterScreenRoute>{
                 RegisterScreen(
                     navController = navController
                 )
             }
-
-
-            composable<LoginScreenRoute> {
+            composable <LoginScreenRoute>{
                 LoginScreen(
                     navController = navController
                 )
             }
 
-            navigation<MainScreenGraph>(
-                startDestination = MainScreenRoute
-            ){
-               composable<MainScreenRoute> {
-                   MainScreen()
-               }
+            composable <HomeScreenRoute>{
+                HomeScreen(navController)
             }
         }
     }

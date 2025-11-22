@@ -34,6 +34,7 @@ kotlin {
             implementation(libs.androidx.activity.compose)
         }
         commonMain.dependencies {
+            implementation("com.russhwolf:multiplatform-settings-no-arg:1.3.0")
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
