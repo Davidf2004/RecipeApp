@@ -14,7 +14,6 @@ import kotlinx.coroutines.launch
 
 
 class RecipeViewModel : ViewModel() {
-    val userId = AppUser.getUserId()
     val recipeService = ktorfitClient.createRecipeService()
 
     var recipes by mutableStateOf<List<Recipe>>(listOf())
@@ -59,34 +58,40 @@ class RecipeViewModel : ViewModel() {
     fun getRecipes(){
         viewModelScope.launch {
             try {
-                val result = recipeService.getRecipesByUserId(userId)
+                val uid = AppUser.getUserId()
+                println("getRecipes() userId = $uid")
+                val result = recipeService.getRecipesByUserId(uid)
+                println("getRecipes() result size = ${result.size}")
                 recipes = result.takeLast(5).reversed()
-                println(result.toString())
-            }
-            catch (e : Exception){
-                println(e.toString())
+            } catch (e : Exception){
+                println("Error en getRecipes: $e")
             }
         }
     }
 
     fun saveRecipeInDb(){
+        val generated = generatedRecipe ?: return
         viewModelScope.launch {
             try {
+                val uid = AppUser.getUserId()
+                println("saveRecipeInDb() userId = $uid")
                 val recipe = Recipe(
                     id = 0,
-                    userId = userId,
-                    category = generatedRecipe?.category ?: "",
-                    imageUrl = generatedRecipe?.imageUrl ?: "",
-                    ingredients = generatedRecipe?.ingredients ?: listOf(),
-                    instructions = generatedRecipe?.instructions ?: listOf(),
-                    minutes = generatedRecipe?.stars ?: 0,
-                    stars = generatedRecipe?.stars ?: 0,
-                    title = generatedRecipe?.title ?: ""
+                    userId = uid,
+                    category = generated.category ?: "",
+                    imageUrl = generated.imageUrl ?: "",
+                    ingredients = generated.ingredients ?: emptyList(),
+                    instructions = generated.instructions ?: emptyList(),
+                    minutes = generated.minutes ?: 0,
+                    stars = generated.stars ?: 0,
+                    title = generated.title ?: ""
                 )
-                val result = recipeService.saveGeneratedRecipe(recipe = recipe)
-                print(result.toString())
-            }catch (e: Exception){
-                println(e.toString())
+                // Guardar en el backend
+                recipeService.saveGeneratedRecipe(recipe = recipe)
+                // Volver a cargar las recetas del backend para refrescar "Tus recetas recientes"
+                getRecipes()
+            } catch (e: Exception){
+                println("Error al guardar receta: $e")
             }
         }
     }

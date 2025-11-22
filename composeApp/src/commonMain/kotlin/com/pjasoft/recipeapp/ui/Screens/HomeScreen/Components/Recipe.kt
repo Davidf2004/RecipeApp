@@ -33,7 +33,11 @@ import com.pjasoft.recipeapp.domain.dts.RecipeD
 import com.pjasoft.recipeapp.ui.RecipeTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
-fun GeneratedRecipe(recipe: RecipeD?, onSave: () -> Unit){
+fun GeneratedRecipe(
+    recipe: RecipeD?,
+    onSave: () -> Unit,
+    onClose: () -> Unit,
+) {
     val colors = MaterialTheme.colorScheme
     Column(
         modifier = Modifier
@@ -114,10 +118,23 @@ fun GeneratedRecipe(recipe: RecipeD?, onSave: () -> Unit){
                 )
             }
         }
-        Button(
-            onClick = onSave
-        ){
-            Text("Guardar")
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            androidx.compose.material3.OutlinedButton(
+                onClick = onClose,
+                modifier = Modifier.padding(end = 8.dp)
+            ) {
+                Text("Cerrar")
+            }
+
+            Button(onClick = onSave) {
+                Text("Guardar")
+            }
         }
     }
 }
@@ -161,7 +178,8 @@ fun GeneratedRecipeView(){
     RecipeTheme {
         GeneratedRecipe(
             recipe = recipe,
-            {}
+            onSave = {},
+            onClose = {}
         )
     }
 }
